@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thanh toán</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+
+<header>
+    <h1>WEBSITE BÁN HÀNG ĐIỆN TỬ</h1>
+
+    <nav>
+        <a href="/">Trang chủ</a>
+        <a href="/products">Sản phẩm</a>
+        <a href="/cart">Giỏ hàng</a>
+
+        <% if (sessionUser) { %>
+            <a href="/auth/profile">Tài khoản</a>
+            <a href="/orders/history">Đơn hàng</a>
+            <a href="/auth/logout">Đăng xuất</a>
+        <% } else { %>
+            <a href="/auth/login">Đăng nhập</a>
+            <a href="/auth/register">Đăng ký</a>
+        <% } %>
+    </nav>
+</header>
+
+<main>
+
+    <section class="products">
+
+        <h2>Thanh toán</h2>
+
+        <form action="/orders/checkout" method="POST">
+
+            <h3>Thông tin nhận hàng</h3>
+
+            <br>
+
+            <label>Họ và tên</label>
+
+            <input
+                type="text"
+                name="name"
+                value="<%= sessionUser ? sessionUser.name : '' %>"
+                placeholder="Nhập họ và tên"
+                required
+            >
+
+            <br><br>
+
+            <label>Số điện thoại</label>
+
+            <input
+                type="tel"
+                name="phone"
+                placeholder="Nhập số điện thoại"
+                required
+            >
+
+            <br><br>
+
+            <label>Địa chỉ nhận hàng</label>
+
+            <textarea
+                name="address"
+                placeholder="Nhập địa chỉ nhận hàng"
+                rows="4"
+                required
+            ></textarea>
+
+            <br><br>
+
+            <h3>Sản phẩm trong đơn hàng</h3>
+
+            <% cart.forEach(item => { %>
+
+                <div class="product">
+
+                    <h4>
+                        <%= item.name %>
+                    </h4>
+
+                    <p>
+                        Số lượng:
+                        <strong>
+                            <%= item.quantity %>
+                        </strong>
+                    </p>
+
+                    <p>
+                        Đơn giá:
+                        <strong>
+                            <%= item.price.toLocaleString("vi-VN") %> VNĐ
+                        </strong>
+                    </p>
+
+                    <p>
+                        Thành tiền:
+                        <strong>
+                            <%= (item.price * item.quantity).toLocaleString("vi-VN") %> VNĐ
+                        </strong>
+                    </p>
+
+                </div>
+
+                <br>
+
+            <% }) %>
+
+            <h2>
+                Tổng tiền:
+                <strong>
+                    <%= total.toLocaleString("vi-VN") %> VNĐ
+                </strong>
+            </h2>
+
+            <br>
+
+            <button type="submit">
+                Đặt hàng
+            </button>
+
+        </form>
+
+    </section>
+
+</main>
+
+<footer>
+    <p>Website bán hàng điện tử</p>
+</footer>
+
+</body>
+</html>

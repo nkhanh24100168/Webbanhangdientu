@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Giỏ hàng</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+
+<header>
+    <h1>WEBSITE BÁN HÀNG ĐIỆN TỬ</h1>
+
+    <nav>
+        <a href="/">Trang chủ</a>
+        <a href="/products">Sản phẩm</a>
+        <a href="/cart">Giỏ hàng</a>
+
+        <% if (sessionUser) { %>
+
+            <a href="/auth/profile">Tài khoản</a>
+            <a href="/orders/history">Đơn hàng</a>
+            <a href="/auth/logout">Đăng xuất</a>
+
+        <% } else { %>
+
+            <a href="/auth/login">Đăng nhập</a>
+            <a href="/auth/register">Đăng ký</a>
+
+        <% } %>
+    </nav>
+</header>
+
+<main>
+
+    <section class="products">
+
+        <h2>🛒 Giỏ hàng của bạn</h2>
+
+        <% if (cart.length === 0) { %>
+
+            <div class="product">
+                <h3>Giỏ hàng đang trống</h3>
+
+                <p>
+                    Bạn chưa có sản phẩm nào trong giỏ hàng.
+                </p>
+
+                <br>
+
+                <a href="/products">
+                    Xem sản phẩm
+                </a>
+            </div>
+
+        <% } else { %>
+
+            <% cart.forEach(item => { %>
+
+                <div class="product">
+
+                    <div class="product-image">
+                        Hình sản phẩm
+                    </div>
+
+                    <h3>
+                        <%= item.name %>
+                    </h3>
+
+                    <p>
+                        Đơn giá:
+                        <strong>
+                            <%= item.price.toLocaleString("vi-VN") %> VNĐ
+                        </strong>
+                    </p>
+
+                    <p>
+                        Số lượng:
+                        <strong>
+                            <%= item.quantity %>
+                        </strong>
+                    </p>
+
+                    <p>
+                        Thành tiền:
+                        <strong>
+                            <%= (item.price * item.quantity).toLocaleString("vi-VN") %> VNĐ
+                        </strong>
+                    </p>
+
+                    <div>
+
+                        <form
+                            action="/cart/decrease/<%= item.id %>"
+                            method="POST"
+                            style="display:inline;"
+                        >
+                            <button type="submit">−</button>
+                        </form>
+
+                        <strong>
+                            <%= item.quantity %>
+                        </strong>
+
+                        <form
+                            action="/cart/increase/<%= item.id %>"
+                            method="POST"
+                            style="display:inline;"
+                        >
+                            <button type="submit">+</button>
+                        </form>
+
+                    </div>
+
+                    <br>
+
+                    <form
+                        action="/cart/remove/<%= item.id %>"
+                        method="POST"
+                    >
+                        <button type="submit">
+                            Xóa sản phẩm
+                        </button>
+                    </form>
+
+                </div>
+
+                <br>
+
+            <% }) %>
+
+            <div class="product">
+
+                <h2>
+                    Tổng tiền:
+                    <strong>
+                        <%= total.toLocaleString("vi-VN") %> VNĐ
+                    </strong>
+                </h2>
+
+                <br>
+
+                <a href="/products">
+                    Tiếp tục mua hàng
+                </a>
+
+                <br><br>
+
+                <a href="/orders/checkout">
+                    <button type="button">
+                        Thanh toán
+                    </button>
+                </a>
+
+            </div>
+
+        <% } %>
+
+    </section>
+
+</main>
+
+<footer>
+    <p>Website bán hàng điện tử</p>
+</footer>
+
+</body>
+</html>

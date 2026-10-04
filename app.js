@@ -1,0 +1,41 @@
+const express = require("express");
+const path = require("path");
+const session = require("express-session");
+
+const app = express();
+const PORT = 3000;
+
+const productRoutes = require("./routes/productRoutes");
+const authRoutes = require("./routes/authRoutes");
+const cartRoutes = require("./routes/cartRoutes");
+const orderRoutes = require("./routes/orderRoutes");
+
+app.set("view engine", "ejs");
+app.set("views", path.join(__dirname, "views"));
+
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, "public")));
+
+app.use(
+    session({
+        secret: "web-ban-hang-dien-tu",
+        resave: false,
+        saveUninitialized: true
+    })
+);
+
+app.get("/", (req, res) => {
+    res.render("home", {
+        sessionUser: req.session.user
+    });
+});
+
+
+app.use("/products", productRoutes);
+app.use("/auth", authRoutes);
+app.use("/cart", cartRoutes);
+app.use("/orders", orderRoutes);
+
+app.listen(PORT, () => {
+    console.log(`Server đang chạy tại http://localhost:${PORT}`);
+});
